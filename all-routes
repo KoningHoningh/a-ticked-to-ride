@@ -31,7 +31,7 @@ def get_distance(x, y, dict):
 
 
 
-with open(r"C:\Users\Eelco\Documents\A_ticket_to_ride.csv", "r") as a_ticket_to_ride:
+with open(r"A_ticket_to_ride.csv", "r") as a_ticket_to_ride:
     dict = {}
     for x in a_ticket_to_ride.read().split("\n")[:-1]:
         dict[x.split(";")[0]] = ((x.split(";")[1], x.split(";")[2]), (x.split(";")[3], x.split(";")[4]), (x.split(";")[5], x.split(";")[6]),(x.split(";")[7], x.split(";")[8]),(x.split(";")[9], x.split(";")[10]))
