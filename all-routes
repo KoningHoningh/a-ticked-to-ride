@@ -1,0 +1,62 @@
+import csv
+import random
+
+
+def get_distance(x, y, dict):
+    start_location = x
+    output = 0
+    steps = 0
+    no_go = [""]
+
+    while x != y:
+        possible_options = 0
+        possible_destinations = []
+        for destination in dict[x]:
+            possible_destinations.append(destination[0])
+        for d in possible_destinations:
+            if d not in no_go:
+                possible_options += 1
+        if possible_options == 0:
+            x = start_location
+            no_go = [""]
+        n = random.randint(0, 4)
+        next_stop = dict[x][n][0]
+        if next_stop not in no_go:
+            output += int(dict[x][n][1])
+            no_go.append(x)
+            x = next_stop
+            steps += 1
+
+    return (output, steps)
+
+
+
+with open(r"C:\Users\Eelco\Documents\A_ticket_to_ride.csv", "r") as a_ticket_to_ride:
+    dict = {}
+    for x in a_ticket_to_ride.read().split("\n")[:-1]:
+        dict[x.split(";")[0]] = ((x.split(";")[1], x.split(";")[2]), (x.split(";")[3], x.split(";")[4]), (x.split(";")[5], x.split(";")[6]),(x.split(";")[7], x.split(";")[8]),(x.split(";")[9], x.split(";")[10]))
+    route_list = []
+    route_length = {}
+    count = 0
+    for x in dict:
+            start_location = x
+            for y in dict:
+                end_location = y
+                if x != y and (y, x) not in route_list:
+                    if y not in [dict[x][0][0], dict[x][1][0], dict[x][2][0], dict[x][3][0], dict[x][4][0]]:
+                        min_distance = 1000
+                        min_steps = 1000
+                        for n in range(2000):
+                            output, steps = get_distance(x, y, dict)
+                            if output < min_distance:
+                                min_distance = output
+                                min_steps = steps
+                        route_list.append((x, y))
+                        route_list.append((y, x))
+                        route_length[(x, y)] = (min_distance, min_steps)
+                        route_length[(y, x)] = (min_distance, min_steps)
+                        print(x, y, min_steps, min_distance)
+            count += 1
+    route_list.sort()
+    for x in route_list:
+        print("{}: {}.".format(x, route_length[x]))
